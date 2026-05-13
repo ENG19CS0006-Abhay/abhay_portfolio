@@ -1,0 +1,12 @@
+{
+  "name": "abhay-portfolio",
+  "version": "1.0.0",
+  "description": "Abhay V R Portfolio",
+  "scripts": {
+    "build": "node build.js",
+    "dev": "cp config.example.js config.js && echo 'config.js created from example'"
+  },
+  "keywords": ["portfolio", "developer"],
+  "author": "Abhay V R",
+  "license": "MIT"
+}

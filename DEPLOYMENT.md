@@ -11,33 +11,59 @@
 
 3. Open `index.html` in your browser
 
-## Vercel Deployment
+## Vercel Deployment (Recommended)
 
-### Method 1: Add config.js After Deployment (Easiest)
+### Step 1: Set Environment Variable in Vercel
 
-1. Deploy to Vercel normally
-2. After deployment, go to your Vercel project → **Settings** → **Files**
-3. Click **Add** and create `config.js` with your key:
-   ```javascript
-   const CONFIG = {
-       web3formsAccessKey: 'your_actual_key_here'
-   };
-   ```
+1. Go to your Vercel project → **Settings** → **Environment Variables**
+2. Add a new variable:
+   - **Name:** `WEB3_ACCESS_KEY`
+   - **Value:** `your_web3forms_access_key_here`
+   - **Environments:** Production (and Development if needed)
 
-### Method 2: Use Environment Variables (Recommended for Security)
+### Step 2: Configure Build Command
 
-1. In your Vercel project → **Settings** → **Environment Variables**
-2. Add variable: `WEB3_ACCESS_KEY` = `your_web3forms_access_key`
-3. In the deployment, the script will automatically use `window.__WEB3_ACCESS_KEY__`
+1. In Vercel project → **Settings** → **Build & Development Settings**
+2. Set **Build Command** to: `node build.js`
+3. Leave **Output Directory** empty (this is a static site)
 
-> Note: This requires a build step. For pure static HTML, Method 1 is simpler.
+### Step 3: Deploy
 
-### Method 3: Create config.js During Build (With Build Process)
+Push your changes to GitHub and Vercel will automatically:
+1. Run `node build.js` which reads the `WEB3_ACCESS_KEY` environment variable
+2. Generate `config.js` with your access key
+3. Deploy the site
 
-If you set up a package.json with a build script, you can generate `config.js` dynamically using Vercel environment variables.
+```
+┌─────────────────────────────────────┐
+│  Vercel receives your push          │
+│  ↓                                  │
+│  Runs: node build.js                │
+│  ↓                                  │
+│  Reads WEB3_ACCESS_KEY env var      │
+│  ↓                                  │
+│  Generates config.js                │
+│  ↓                                  │
+│  Deploys your site                  │
+└─────────────────────────────────────┘
+```
+
+## Troubleshooting
+
+**If contact form still doesn't work:**
+
+1. Check Vercel logs:
+   - Go to **Deployments** → Click latest → **View Logs**
+   - Look for `config.js generated successfully`
+
+2. Verify environment variable:
+   - Settings → Environment Variables → Confirm `WEB3_ACCESS_KEY` is set
+
+3. Clear browser cache and reload
 
 ## Security Notes
 
 - `config.js` is in `.gitignore` - it will never be committed
-- Your Web3Forms access key should never be in version control
-- Always keep `.env` and `config.js` in `.gitignore`
+- `build.js` generates `config.js` at build time using the environment variable
+- Your Web3Forms access key is **never** in the repository
+- Environment variables are only visible to your Vercel project
